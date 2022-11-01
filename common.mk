@@ -79,7 +79,7 @@ endif
 # # Then in QEMU, run:
 # # $ mount -t 9p -o trans=virtio host <mount_point>
 # # Or enable QEMU_VIRTFS_AUTOMOUNT
-QEMU_VIRTFS_ENABLE	?= n
+QEMU_VIRTFS_ENABLE	?= y
 QEMU_VIRTFS_HOST_DIR	?= $(ROOT)
 
 # Persistent Secure Storage via shared folder
@@ -94,7 +94,7 @@ QEMU_PSS_HOST_DIR	?= /tmp/qemu-data-tee
 # target directory. This can be done without rebuilding everything as follows:
 # rm -rf ../out-br/target; find ../out-br/ -name .stamp_target_installed | xargs rm
 # make <flags> run
-QEMU_VIRTFS_AUTOMOUNT	?= n
+QEMU_VIRTFS_AUTOMOUNT	?= y
 QEMU_PSS_AUTOMOUNT	?= n
 # Mount point for the shared directory inside QEMU
 # Used by the post-build script, this is written to /etc/fstab as the mount
@@ -311,6 +311,14 @@ BR2_PACKAGE_OPTEE_TEST_EXT_GP_PACKAGE := $(GP_PACKAGE)
 BR2_PACKAGE_OPTEE_TEST_EXT_WITH_TLS_TESTS := $(WITH_TLS_TESTS)
 BR2_PACKAGE_OPTEE_TEST_EXT_WITH_CXX_TESTS := $(WITH_CXX_TESTS)
 BR2_PACKAGE_STRACE ?= y
+BR2_PACKAGE_PYTHON3 ?= y
+BR2_PACKAGE_ZLIB ?= y
+BR2_PACKAGE_PYTHON3_ZLIB ?= y
+BR2_PACKAGE_PYTHON3_XML ?= y
+BR2_PACKAGE_PYTHON3_PYEXPAT ?= y
+BR2_PACKAGE_PYTHON3_SQLITE ?= y
+BR2_PACKAGE_PYTHON3_SSL ?= y
+
 ifeq ($(XEN_BOOT),y)
 BR2_TARGET_GENERIC_GETTY_PORT ?= "console"
 else
@@ -493,7 +501,7 @@ xterm := $(shell command -v xterm 2>/dev/null)
 ifdef gnome-terminal
 define launch-terminal
 	@nc -z  127.0.0.1 $(1) || \
-	$(gnome-terminal) -t $(2) -x $(BUILD_PATH)/soc_term.py $(1) &
+	dbus-launch $(gnome-terminal) -t $(2) -x $(BUILD_PATH)/soc_term.py $(1) &
 endef
 else
 ifdef xterm
